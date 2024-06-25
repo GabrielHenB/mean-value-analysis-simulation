@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,9 +28,11 @@ public class MainWindow {
 	private JPanel resultsContainer;
 	private JScrollPane scrollPane;
 	private JPanel scenariosContainer;
+	private JCheckBox usarTaxasVisitas;
 	
 	
 	// Data
+	private boolean usarTaxas = false;
 	private JTextField inputClientes;
 	private JTextField inputRecursos;
 	private JTextField inputChegadas;
@@ -121,10 +124,29 @@ public class MainWindow {
 		tutorialContainer.setBackground(new Color(20,20,20));
 		tutorialContainer.add(tutorial);
 		
+		usarTaxasVisitas = new JCheckBox();
+		usarTaxasVisitas.setBackground(new Color(20,20,20));
+		usarTaxasVisitas.setForeground(Color.white);
+		usarTaxasVisitas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				usarTaxas = true;
+			}
+		});
+		JLabel checkboxText = new JLabel("<html>Utilizar taxas de visitas<br>"
+				+ " (Se desmarcado calcula a partir da taxa de chegadas,<br> considerando uma distribuição uniforme de visitas)</html>");
+		checkboxText.setForeground(Color.white);
+		JPanel checkboxContainer = new JPanel();
+		checkboxContainer.setBackground(new Color(20,20,20));
+		checkboxContainer.add(usarTaxasVisitas);
+		checkboxContainer.add(checkboxText);
+		
+		
 		optionsContainer.add(i1);
 		optionsContainer.add(i2);
 		optionsContainer.add(i3);
 		optionsContainer.add(tutorialContainer);
+		optionsContainer.add(checkboxContainer);
 		optionsContainer.add(i4);
 		optionsContainer.add(i5);
 		
@@ -139,8 +161,8 @@ public class MainWindow {
 		
 		scenariosContainer = new JPanel();
 		scenariosContainer.setBackground(new Color(20,20,20));
-		setScenario("4","3","0","5,4,8","2,2,2","1","minutos");
-		setScenario("4","3","0","0.400,0.700,0.650","2,3,2","2","segundos");
+		setScenario("4","3","6","5,8,4","2,2,2","1","minutos");
+		setScenario("4","3","6","0.400,0.700,0.650","2,3,2","2","segundos");
 		
 		optionsContainer.add(scenariosContainer);
 		
@@ -215,8 +237,8 @@ public class MainWindow {
 					+ "no formato correto: (float),(float)");
 		}
 		else {
-			MVA algoritmo = new MVA(clientes, recursos, taxa, servicos, visitas);
-			String result = algoritmo.runAllAndReturn();
+			MVA algoritmo = new MVA(clientes, recursos, taxa, servicos, visitas, usarTaxas);
+			String result = algoritmo.runAllAndReturn(usarTaxas);
 			render(result);
 		}
 		
@@ -277,7 +299,7 @@ public class MainWindow {
 	public boolean validate(int clientes, int recursos, float taxa, float[] servico, float[] visitas) {
 		boolean ok = true;
 		
-		if(clientes <= 0 || recursos <= 0 || taxa < 0) {
+		if(clientes <= 0 || recursos <= 0 || taxa <= 0) {
 			ok = false;
 		}
 		

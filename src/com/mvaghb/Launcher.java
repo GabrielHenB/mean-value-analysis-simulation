@@ -16,14 +16,19 @@ public class Launcher {
 		});
 		
 		// Mean Value Analysis
-		int clients = 4;
+		/*int clients = 4;
 		int resources = 3;
 		float taxaChegadaSistema = 0; // do sistema
 		float taxaServico = 0; // de cada recurso
 		float[] taxasServico = {5, 8, 4};
 		float[] visitas = {2, 2, 2};
 		MVA algoritmo = new MVA(4,3,0,taxasServico,visitas);
-		algoritmo.runAll();
+		algoritmo.runAll();*/
+		
+		MeanValueAlgo algo = new MeanValueAlgo();
+		algo.execute();
+		
+		
 	}
 
 }

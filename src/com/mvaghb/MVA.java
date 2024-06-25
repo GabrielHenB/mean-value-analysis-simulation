@@ -9,6 +9,7 @@ public class MVA {
 	private float[] taxasServico;
 	private float[] taxasVisitas;
 	private float[][] temposResposta;
+	private boolean usarTaxas = false;
 	
 	// Inferidos
 	private float[][] Xi;
@@ -25,8 +26,10 @@ public class MVA {
 		taxaChegada = taxa;
 		taxasServico = servico;
 		
-		//taxasVisitas = new float[this.recursos];
-		taxasVisitas = visitas;
+		// Se o usuario forneceu as taxas de visitas ele as utilize, se nao ele obtem
+		// assumindo uma distribuicao uniforme
+		if (usarTaxas) taxasVisitas = visitas;
+		else {System.out.println(" TENTANDO OBTER AS TAXAS ");   taxasVisitas = calculateVisitRates(taxa, recursos);}
 		temposResposta = new float[this.recursos][n+1];
 		Xi = new float[this.recursos][n+1];
 		Ui = new float[this.recursos][n+1];
@@ -38,6 +41,44 @@ public class MVA {
 			temposResposta[i][0] = taxasServico[i] * (1+0);
 		}
 	}
+	
+	public MVA(int clientes, int recursos, float taxa, float[] servico, float[] visitas, boolean usar) {
+		n = clientes;
+		this.recursos = recursos;
+		taxaChegada = taxa;
+		taxasServico = servico;
+		this.usarTaxas = usar;
+		
+		// Se o usuario forneceu as taxas de visitas ele as utilize, se nao ele obtem
+		// assumindo uma distribuicao uniforme
+		if (usarTaxas) {
+			taxasVisitas = visitas;
+		}
+		else {
+			System.out.println(" TENTANDO OBTER AS TAXAS ");
+			taxasVisitas = calculateVisitRates(taxa, recursos);
+		}
+		
+		temposResposta = new float[this.recursos][n+1];
+		Xi = new float[this.recursos][n+1];
+		Ui = new float[this.recursos][n+1];
+		Ni = new float[this.recursos][n+1];
+		Wi = new float[this.recursos][n+1];
+		// Isso eh feito para cada fila ou recurso do sistema
+		for(int i = 0; i < this.recursos; i++) {
+			//Ri = Si x [1 + N(0)]
+			temposResposta[i][0] = taxasServico[i] * (1+0);
+		}
+	}
+	
+	private float[] calculateVisitRates(float lambda, int recursos) {
+        float[] visitRates = new float[recursos];
+        // Assumindo uma distribuição uniforme de visitas aos recursos
+        for (int i = 0; i < recursos; i++) {
+            visitRates[i] = lambda / recursos;
+        }
+        return visitRates;
+    }
 	
 	public float recursivePerDevice(int index, int ni, float si) {
 		if(ni == 0) {
@@ -105,8 +146,9 @@ public class MVA {
 		}
 	}
 	
-	public String runAllAndReturn() {
+	public String runAllAndReturn(boolean usarTaxas) {
 		// [R, W, Ui, N]
+		this.usarTaxas = usarTaxas;
 		runAll();
 		String result = "";
 		for(int recurso = 0; recurso < recursos; recurso++) {
