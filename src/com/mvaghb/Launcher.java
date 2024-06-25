@@ -25,10 +25,6 @@ public class Launcher {
 		MVA algoritmo = new MVA(4,3,0,taxasServico,visitas);
 		algoritmo.runAll();*/
 		
-		MeanValueAlgo algo = new MeanValueAlgo();
-		algo.execute();
-		
-		
 	}
 
 }

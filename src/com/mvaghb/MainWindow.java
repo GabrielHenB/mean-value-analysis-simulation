@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -163,6 +164,7 @@ public class MainWindow {
 		scenariosContainer.setBackground(new Color(20,20,20));
 		setScenario("4","3","6","5,8,4","2,2,2","1","minutos");
 		setScenario("4","3","6","0.400,0.700,0.650","2,3,2","2","segundos");
+		setScenario("8","3","2","0.6,0.7,0.8","1,1,1","3","minutos");
 		
 		optionsContainer.add(scenariosContainer);
 		
@@ -206,7 +208,7 @@ public class MainWindow {
 		// Grab needed values and run MVA
 		
 		// Valida se existem campos vazios
-		if(clientesTexto.length() <= 0 || recursosTexto.length() <= 0 || taxaTexto.length() <= 0 || servicosTexto.length() <= 0 || visitasTexto.length() <= 0) {
+		if(clientesTexto.length() <= 0 || recursosTexto.length() <= 0 || taxaTexto.length() <= 0 || servicosTexto.length() <= 0 || visitasTexto.length() <= 0 ) {
 			render("Erro!\n Existem campos em branco!");
 			return;
 		}
@@ -287,6 +289,10 @@ public class MainWindow {
 		output.setText(output.getText() + "\n\n" + text);
 	}
 	
+	public void renderWarn(String text) {
+		JOptionPane.showMessageDialog(window, text, "Aviso", JOptionPane.WARNING_MESSAGE);
+	}
+	
 	/**
 	 * Funcao rapida para validar os dados de entrada do formulario
 	 * @param clientes
@@ -305,6 +311,12 @@ public class MainWindow {
 		
 		if(servico.length < recursos || visitas.length < recursos) {
 			ok = false;
+		}
+		
+		if (clientes > 12 || recursos > 12) {
+			renderWarn("Atenção: Um valor muito grande de clientes ou recursos foi fornecido"
+					+ " isso pode levar a um GRANDE tempo de execução ou até mesmo gerar algum erro!");
+			//ok = false;
 		}
 		
 		return ok;
