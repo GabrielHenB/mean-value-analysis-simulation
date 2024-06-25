@@ -6,14 +6,14 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		// Swing needs to be run on a single thread bc its not thread safe
-		/*SwingUtilities.invokeLater(new Runnable () {
+		SwingUtilities.invokeLater(new Runnable () {
 			@Override
 			public void run() {
 				// Instancia a janela principal
 				MainWindow main = new MainWindow();
 				main.show();
 			}
-		});*/
+		});
 		
 		// Mean Value Analysis
 		int clients = 4;

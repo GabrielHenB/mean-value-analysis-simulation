@@ -104,4 +104,40 @@ public class MVA {
 			System.out.println("R = " + temposResposta[a][n] + "| W = " + Wi[a][n] + "| Utilizacao = " + Ui[a][n] + "| N = " + Ni[a][n]);
 		}
 	}
+	
+	public String runAllAndReturn() {
+		// [R, W, Ui, N]
+		runAll();
+		String result = "";
+		for(int recurso = 0; recurso < recursos; recurso++) {
+			result += "\nRecurso [" + recurso + "]\n Tempo de Resposta Médio = " + temposResposta[recurso][n] +
+					"\n| Tempo de Espera W = " + Wi[recurso][n] + "\n| Utilização = " + Ui[recurso][n] + "\n| N = " + Ni[recurso][n];
+			result += " ";
+		}
+		result += "\n";
+		return result;
+	}
+	
+	/**
+	 * Funcao rapida para validar os dados de entrada do formulario
+	 * @param clientes
+	 * @param recursos
+	 * @param taxa
+	 * @param servico
+	 * @param visitas
+	 * @return
+	 */
+	public boolean validate(int clientes, int recursos, float taxa, float[] servico, float[] visitas) {
+		boolean ok = true;
+		
+		if(clientes <= 0 || recursos <= 0 || taxa < 0) {
+			ok = false;
+		}
+		
+		if(servico.length < recursos || visitas.length < recursos) {
+			ok = false;
+		}
+		
+		return ok;
+	}
 }
