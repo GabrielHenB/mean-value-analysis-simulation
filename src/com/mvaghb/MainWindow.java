@@ -26,6 +26,7 @@ public class MainWindow {
 	private JPanel optionsContainer;
 	private JPanel resultsContainer;
 	private JScrollPane scrollPane;
+	private JPanel scenariosContainer;
 	
 	
 	// Data
@@ -77,7 +78,9 @@ public class MainWindow {
 		optionsContainer.add(intro);
 		
 		JLabel tutorial = new JLabel();
-		tutorial.setText("<html>Digite no formato exemplo: 2.4 , 3.42 <br>Separe por ',' e decimais com '.'.</html>");
+		tutorial.setText("<html>Digite no formato exemplo: 2.4 , 3.42 <br>Separe por ',' e decimais com '.'.<br>"
+				+ "Se os valores forem por minuto o resultado sera por minuto e assim em diante<br>"
+				+ "O calculo é sobre o valor e nao considera unidade!</html>");
 		tutorial.setForeground(Color.white);
 		intro.setBackground(new Color(20,20,20));
 		intro.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -132,6 +135,15 @@ public class MainWindow {
 			}
 		});
 		optionsContainer.add(buttonRun);
+		
+		
+		scenariosContainer = new JPanel();
+		scenariosContainer.setBackground(new Color(20,20,20));
+		setScenario("4","3","0","5,4,8","2,2,2","1","minutos");
+		setScenario("4","3","0","0.400,0.700,0.650","2,3,2","2","segundos");
+		
+		optionsContainer.add(scenariosContainer);
+		
 		mainContainer.add(optionsContainer);
 		
 		output = new JTextArea(4,50);
@@ -139,6 +151,7 @@ public class MainWindow {
 		output.setBackground(Color.BLACK);
 		output.setLineWrap(true);
 		output.setEditable(false);
+		output.setFont(new Font("sans-serif", Font.PLAIN, 16));
 		scrollPane = new JScrollPane(output);
 		resultsContainer.setLayout(new BorderLayout());
 		resultsContainer.add(scrollPane, BorderLayout.CENTER);
@@ -209,6 +222,29 @@ public class MainWindow {
 		
 	}
 	
+	public void setScenario(String clientes, String recursos, String taxa, String servicos, String visitas, String index, String unidade) {
+		JButton buttonScenario = createBtn("Cenário " + index, "Carrega os dados do cenário de teste", new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inputClientes.setText(clientes);
+				inputRecursos.setText(recursos);
+				inputChegadas.setText(taxa);
+				inputServicos.setText(servicos);
+				inputVisitas.setText(visitas);
+				render("Cenário de Teste Carregado ... Use Start para simular!");
+				renderKeep("Descrição do Cenário: " + "\nN de Clientes  =  " + clientes + "\nN de Recursos (Filas) = " + recursos);
+				renderKeep("Taxas de Serviço por Recurso = " + servicos + " " + unidade + "/v" + "\nTaxas de Visitas por Recursos = " + visitas + " visitas/" + unidade);
+			}
+		});
+		
+		this.scenariosContainer.add(buttonScenario);
+	}
+	
+	/**
+	 * Gera o texto no display de resultados
+	 * @param text
+	 * @return
+	 */
 	public JTextField render(String text) {
 		JTextField content = new JTextField(30);
 		/*content.setEditable(false);
@@ -219,6 +255,14 @@ public class MainWindow {
 		System.out.println("TEXTO RECEBIDO = " + text);
 		output.setText(text);
 		return content;
+	}
+	
+	/**
+	 * Gera o texto no display de resultados, concatenando com o que ja estava la.
+	 * @param text
+	 */
+	public void renderKeep(String text) {
+		output.setText(output.getText() + "\n\n" + text);
 	}
 	
 	/**

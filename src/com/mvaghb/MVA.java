@@ -110,7 +110,7 @@ public class MVA {
 		runAll();
 		String result = "";
 		for(int recurso = 0; recurso < recursos; recurso++) {
-			result += "\nRecurso [" + recurso + "]\n Tempo de Resposta Médio = " + temposResposta[recurso][n] +
+			result += "\nRecurso de número [" + recurso + "]\n| Tempo de Resposta Médio = " + temposResposta[recurso][n] +
 					"\n| Tempo de Espera W = " + Wi[recurso][n] + "\n| Utilização = " + Ui[recurso][n] + "\n| N = " + Ni[recurso][n];
 			result += " ";
 		}
