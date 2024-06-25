@@ -1,5 +1,7 @@
 package com.mvaghb;
 
+import java.util.Arrays;
+
 public class MVA {
 	private int n;
 	private int recursos;
@@ -12,6 +14,7 @@ public class MVA {
 	private float[][] Xi;
 	private float[][] Ui;
 	private float[][] Ni;
+	private float[][] Wi;
 	private float Ro; //tempo reposta do sistema
 	private float Xo; //throughput do sistema
 	
@@ -28,6 +31,7 @@ public class MVA {
 		Xi = new float[this.recursos][n+1];
 		Ui = new float[this.recursos][n+1];
 		Ni = new float[this.recursos][n+1];
+		Wi = new float[this.recursos][n+1];
 		// Isso eh feito para cada fila ou recurso do sistema
 		for(int i = 0; i < this.recursos; i++) {
 			//Ri = Si x [1 + N(0)]
@@ -49,6 +53,7 @@ public class MVA {
 				float temp = 1 + recursivePerDevice(i, ni-1, taxasServico[i]);
 				System.out.println("R i" + i + " = " + taxasServico[i] + " x " + temp);
 				temposResposta[i][ni] = taxasServico[i] * temp;
+				Wi[i][ni] = temposResposta[i][ni] - taxasServico[i];
 				//temposResposta[i] = taxasServico[i] * (1 + recursivePerDevice(i, ni-1, taxasServico[i]));
 			}
 			// Obter tempo de resposta do sistema para n clientes
@@ -83,12 +88,20 @@ public class MVA {
 	}
 	
 	public void runAll() {
+		
 		for(int a = 0; a < recursos; a++) {
 			temposResposta[a][n] = taxasServico[a] * (1 + recursivePerDevice(a, n-1, taxasServico[a]));
+			Wi[a][n] = temposResposta[a][n] - taxasServico[a];
 		}
+		Ro = 0;
+		for (int b = 0; b < recursos; b++) Ro = Ro + (taxasVisitas[b]*temposResposta[b][n]);
+		Xo = n / Ro;
+		for (int b = 0; b < recursos; b++) Xi[b][n] = taxasVisitas[b] * Xo;
+		for (int b = 0; b < recursos; b++) Ui[b][n] = taxasServico[b] * Xi[b][n];
+		for (int b = 0; b < recursos; b++) Ni[b][n] = temposResposta[b][n] * Xi[b][n];
 		for(int a = 0; a < recursos; a++) {
 			System.out.println("Para o recurso " + a);
-			System.out.println("R = " + temposResposta[a][n]);
+			System.out.println("R = " + temposResposta[a][n] + "| W = " + Wi[a][n] + "| Utilizacao = " + Ui[a][n] + "| N = " + Ni[a][n]);
 		}
 	}
 }
